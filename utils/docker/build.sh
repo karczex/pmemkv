@@ -81,7 +81,10 @@ if [[ "$command" == "" ]]; then
 			;;
 		bindings)
 			command="./run-bindings.sh";
+
 			;;
+		doc)
+			command="./run-doc-update.sh"
 		*)
 			echo "ERROR: wrong build TYPE"
 			exit 1
