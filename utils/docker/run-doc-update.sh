@@ -28,7 +28,8 @@ if [ -z $VERSION ]; then
 	echo "Target location for branch $TARGET_BRANCH is not defined."
 	exit 1
 fi
-
+WORKDIR=$(mktemp -d)
+pushd ${WORKDIR}
 # Clone repo
 git clone ${ORIGIN}
 cd $CURR_DIR/${REPO_NAME}
@@ -83,4 +84,5 @@ git push -f ${ORIGIN} $GH_PAGES_NAME
 # When there is already an open PR or there are no changes an error is thrown, which we ignore.
 hub pull-request -f -b ${USER_NAME}:gh-pages -h ${BOT_NAME}:${GH_PAGES_NAME} -m "doc: automatic gh-pages docs update" && true
 
+popd
 exit 0
