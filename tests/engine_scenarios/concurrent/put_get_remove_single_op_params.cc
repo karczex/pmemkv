@@ -56,20 +56,11 @@ static void MultithreadedPutAndRemove(const size_t threads_number, pmem::kv::db 
 	std::vector<uint64_t> keys(threads_number, 0);
 	std::iota(keys.begin(), keys.end(), 0);
 
-	for (size_t i = 0; i < threads_number; i += 2)
-		UT_ASSERTeq(kv.put(uint64_to_strv(keys[i]), uint64_to_strv(keys[i])),
-			    status::OK);
-
 	/* test adding and removing data */
 	parallel_exec(threads_number, [&](size_t thread_id) {
-		if (thread_id % 2 == 0) {
-			UT_ASSERTeq(kv.remove(uint64_to_strv(keys[thread_id])),
-				    status::OK);
-		} else {
 			UT_ASSERTeq(kv.put(uint64_to_strv(keys[thread_id]),
 					   uint64_to_strv(keys[thread_id])),
 				    status::OK);
-		}
 	});
 }
 
