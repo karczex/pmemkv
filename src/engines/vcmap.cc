@@ -106,11 +106,11 @@ status vcmap::put(string_view key, string_view value)
 	map_t::value_type kv_pair{// XXX - do not create temporary string
 				  pmem_string(key.data(), key.size(), ch_allocator),
 				  pmem_string(value.data(), value.size(), ch_allocator)};
-	bool result = pmem_kv_container.insert(kv_pair);
+	map_t::accessor acc;
+	bool result = pmem_kv_container.insert(acc, kv_pair);
 	if (!result) {
-		map_t::accessor result_found;
-		pmem_kv_container.find(result_found, kv_pair.first);
-		result_found->second = kv_pair.second;
+		pmem_kv_container.find(acc, kv_pair.first);
+		acc->second = kv_pair.second;
 	}
 	return status::OK;
 }
