@@ -82,6 +82,7 @@ all language bindings and utilities. Engines are loaded by name at runtime.
 | [csmap](ENGINES-experimental.md#csmap) | Concurrent map | Yes | Yes | Yes |
 | [tree3](ENGINES-experimental.md#tree3) | Persistent B+ tree | Yes | No | No |
 | [stree](ENGINES-experimental.md#stree) | Sorted persistent B+ tree | Yes | No | Yes |
+| [radix](ENGINES-experimental.md#radix) | Sorted persistent radix tree | Yes | No | Yes |
 | [caching](ENGINES-experimental.md#caching) | Caching for remote Memcached or Redis server | Yes | No | - |
 
 The production quality engines are described in the [libpmemkv(7)](doc/libpmemkv.7.md#engines) manual
