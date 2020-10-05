@@ -3,6 +3,9 @@
 
 add_common_flag(-Wno-unused-but-set-variable)
 add_common_flag(-pthread)
+add_common_flag(-ltbb)
+add_common_flag(-ldl)
+add_common_flag(-g)
 
 add_cppstyle(examples ${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_basic_c/*.c
 		${CMAKE_CURRENT_SOURCE_DIR}/pmemkv_basic_cpp/*.cpp
@@ -39,8 +42,12 @@ function(add_example name)
 	add_dependencies(examples example-${name})
 endfunction()
 
+
 add_example(pmemkv_vcmap_crash pmemkv_basic_cpp/pmemkv_vcmap_crash.cpp)
 target_link_libraries(example-pmemkv_vcmap_crash pmemkv)
+
+#add_example(pmemkv_tbb_oom pmemkv_basic_cpp/pmemkv_tbb_oom.cpp)
+#target_link_libraries(example-pmemkv_tbb_oom pmemkv)
 
 add_example(pmemkv_basic_cpp pmemkv_basic_cpp/pmemkv_basic.cpp)
 target_link_libraries(example-pmemkv_basic_cpp pmemkv)
