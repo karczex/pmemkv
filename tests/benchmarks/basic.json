@@ -1,0 +1,7 @@
+{
+   "benchmark" : "DB_bench",
+   "repo_url" : "https://github.com/pmem/pmemkv-tools.git",
+   "env" : {"PMEM_IS_PMEM_FORCE" : "1",
+	   "LD_LIBRARY_PATH" : "/usr/local/lib64/"},
+   "params": [ "--db=/dev/shm/pmemkv", "--db_size_in_gb=1"]
+}
