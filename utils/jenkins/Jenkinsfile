@@ -50,7 +50,7 @@ test_options_param = '''
 '''
 
 type_param = '''
-	choiceParam('TEST_TYPE', ['normal', 'building', 'compatibility'], 'Type of tests')
+	choiceParam('TEST_TYPE', ['normal', 'building', 'compatibility', 'benchmarks'], 'Type of tests')
 '''
 
 coverage_param = '''

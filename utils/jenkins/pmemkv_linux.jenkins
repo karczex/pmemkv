@@ -144,6 +144,26 @@ pipeline {
 										./run-compatibility.sh
 									""")
 									break;
+								case 'benchmarks':
+									dir("${PMEMKV_PATH}/tests/benchmarks")
+									{
+										params.TEST_OPTIONS.split().each { build ->
+										stage("${build}") {
+											catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+										libs.api.run_bash_script("""
+											${ENV_VAL}
+											source ${PMEMKV_PATH}/utils/docker/prepare-for-build.sh
+											mkdir build
+											cd build
+											${build}
+											python3 run_benchmark.py basic.json
+											workspace_cleanup
+										""")
+										}
+									}
+									}
+									}
+									break;
 								default:
 									throw new java.lang.UnsupportedOperationException("TEST_TYPE value '${params.TEST_TYPE}' is not supported. Select: normal, building or compatibility.");
 							}
