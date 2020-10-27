@@ -23,22 +23,30 @@ TESTS_LONG=${TESTS_LONG:-OFF}
 ###############################################################################
 function tests_gcc_debug_cpp11() {
 	printf "\n$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} START$(tput sgr 0)\n"
+	
+	mkdir build
+	cd build
+	
+	build_gcc_debug_cpp11
+	ctest -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout 590 --output-on-failure
+
+	if [ "$COVERAGE" == "1" ]; then
+		upload_codecov gcc_debug_cpp11
+	fi
+
+	workspace_cleanup
+	printf "$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} END$(tput sgr 0)\n\n"
+}
+
+###############################################################################
+# BUILD tests_gcc_debug_cpp11
+###############################################################################
+function tests_gcc_debug_cpp11() {
+	printf "\n$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} START$(tput sgr 0)\n"
 	mkdir build
 	cd build
 
-	CC=gcc CXX=g++ \
-	cmake .. -DCMAKE_BUILD_TYPE=Debug \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
-		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
-		-DCHECK_CPP_STYLE=${CHECK_CPP_STYLE} \
-		-DTESTS_LONG=${TESTS_LONG} \
-		-DDEVELOPER_MODE=1 \
-		-DTESTS_USE_FORCED_PMEM=1 \
-		-DTESTS_PMEMOBJ_DRD_HELGRIND=1 \
-		-DCXX_STANDARD=11
-
+	build_gcc_debug_cpp11
 	make -j$(nproc)
 	ctest -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout 590 --output-on-failure
 
@@ -57,22 +65,8 @@ function tests_gcc_debug_cpp14() {
 	printf "\n$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} START$(tput sgr 0)\n"
 	mkdir build
 	cd build
-
-	CC=gcc CXX=g++ \
-	cmake .. -DCMAKE_BUILD_TYPE=Debug \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
-		-DENGINE_CSMAP=1 \
-		-DENGINE_RADIX=1 \
-		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
-		-DTESTS_LONG=${TESTS_LONG} \
-		-DDEVELOPER_MODE=1 \
-		-DTESTS_USE_FORCED_PMEM=1 \
-		-DTESTS_PMEMOBJ_DRD_HELGRIND=1 \
-		-DCXX_STANDARD=14
-
-	make -j$(nproc)
+	
+	build_gcc_debug_cpp14
 	ctest -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout 590 --output-on-failure
 
 	if [ "$COVERAGE" == "1" ]; then
@@ -91,18 +85,7 @@ function tests_gcc_debug_cpp14_valgrind_other() {
 	mkdir build
 	cd build
 
-	CC=gcc CXX=g++ \
-	cmake .. -DCMAKE_BUILD_TYPE=Debug \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
-		-DENGINE_CSMAP=1 \
-		-DENGINE_RADIX=1 \
-		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
-		-DTESTS_LONG=${TESTS_LONG} \
-		-DTESTS_USE_FORCED_PMEM=1 \
-		-DCXX_STANDARD=14
-
+	build_gcc_debug_cpp14_valgrind_other
 	make -j$(nproc)
 	ctest -R "_helgrind|_pmemcheck|_pmreorder" --timeout 590 --output-on-failure
 
@@ -122,20 +105,7 @@ function tests_gcc_debug_cpp14_valgrind_memcheck_drd() {
 	mkdir build
 	cd build
 
-	CC=gcc CXX=g++ \
-	cmake .. -DCMAKE_BUILD_TYPE=Debug \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
-		-DENGINE_CSMAP=1 \
-		-DENGINE_RADIX=1 \
-		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
-		-DTESTS_LONG=${TESTS_LONG} \
-		-DTESTS_USE_FORCED_PMEM=1 \
-		-DTESTS_PMEMOBJ_DRD_HELGRIND=1 \
-		-DCXX_STANDARD=14
-
-	make -j$(nproc)
+	build_gcc_debug_cpp14_valgrind_memcheck_drd
 	ctest -R "_memcheck|_drd" --timeout 590 --output-on-failure
 
 	if [ "$COVERAGE" == "1" ]; then
@@ -161,18 +131,7 @@ function tests_clang_release_cpp20() {
 	mkdir build
 	cd build
 
-	CC=clang CXX=clang++ cmake .. -DCMAKE_BUILD_TYPE=Release \
-		-DTEST_DIR=$TEST_DIR \
-		-DCMAKE_INSTALL_PREFIX=$PREFIX \
-		-DCOVERAGE=$COVERAGE \
-		-DENGINE_RADIX=1 \
-		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
-		-DTESTS_LONG=${TESTS_LONG} \
-		-DTESTS_USE_FORCED_PMEM=1 \
-		-DTESTS_PMEMOBJ_DRD_HELGRIND=1 \
-		-DDEVELOPER_MODE=1 \
-		-DCXX_STANDARD=20
-
+	build_clang_release_cpp20
 	make -j$(nproc)
 	ctest -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout 590 --output-on-failure
 

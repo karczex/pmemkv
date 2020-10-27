@@ -96,6 +96,88 @@ function workspace_cleanup() {
 	pmempool rm -f ${WORKDIR}/examples/example.poolset
 }
 
+function build_gcc_debug_cpp11() {
+	CC=gcc CXX=g++ \
+	cmake .. -DCMAKE_BUILD_TYPE=Debug \
+		-DTEST_DIR=$TEST_DIR \
+		-DCMAKE_INSTALL_PREFIX=$PREFIX \
+		-DCOVERAGE=$COVERAGE \
+		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
+		-DCHECK_CPP_STYLE=${CHECK_CPP_STYLE} \
+		-DTESTS_LONG=${TESTS_LONG} \
+		-DDEVELOPER_MODE=1 \
+		-DTESTS_USE_FORCED_PMEM=1 \
+		-DTESTS_PMEMOBJ_DRD_HELGRIND=1 \
+		-DCXX_STANDARD=11
+
+	make -j$(nproc)
+}
+
+function build_gcc_debug_cpp14() {
+	CC=gcc CXX=g++ \
+	cmake .. -DCMAKE_BUILD_TYPE=Debug \
+		-DTEST_DIR=$TEST_DIR \
+		-DCMAKE_INSTALL_PREFIX=$PREFIX \
+		-DCOVERAGE=$COVERAGE \
+		-DENGINE_CSMAP=1 \
+		-DENGINE_RADIX=1 \
+		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
+		-DTESTS_LONG=${TESTS_LONG} \
+		-DDEVELOPER_MODE=1 \
+		-DTESTS_USE_FORCED_PMEM=1 \
+		-DTESTS_PMEMOBJ_DRD_HELGRIND=1 \
+		-DCXX_STANDARD=14
+
+	make -j$(nproc)
+}
+
+function build_gcc_debug_cpp14_valgrind_other() {
+	CC=gcc CXX=g++ \
+	cmake .. -DCMAKE_BUILD_TYPE=Debug \
+		-DTEST_DIR=$TEST_DIR \
+		-DCMAKE_INSTALL_PREFIX=$PREFIX \
+		-DCOVERAGE=$COVERAGE \
+		-DENGINE_CSMAP=1 \
+		-DENGINE_RADIX=1 \
+		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
+		-DTESTS_LONG=${TESTS_LONG} \
+		-DTESTS_USE_FORCED_PMEM=1 \
+		-DCXX_STANDARD=14
+}
+
+function build_clang_release_cpp20() {
+	CC=clang CXX=clang++ cmake .. -DCMAKE_BUILD_TYPE=Release \
+		-DTEST_DIR=$TEST_DIR \
+		-DCMAKE_INSTALL_PREFIX=$PREFIX \
+		-DCOVERAGE=$COVERAGE \
+		-DENGINE_RADIX=1 \
+		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
+		-DTESTS_LONG=${TESTS_LONG} \
+		-DTESTS_USE_FORCED_PMEM=1 \
+		-DTESTS_PMEMOBJ_DRD_HELGRIND=1 \
+		-DDEVELOPER_MODE=1 \
+		-DCXX_STANDARD=20
+
+	make -j$(nproc)
+}
+
+function build_gcc_debug_cpp14_valgrind_memcheck_drd() {
+	CC=gcc CXX=g++ \
+	cmake .. -DCMAKE_BUILD_TYPE=Debug \
+		-DTEST_DIR=$TEST_DIR \
+		-DCMAKE_INSTALL_PREFIX=$PREFIX \
+		-DCOVERAGE=$COVERAGE \
+		-DENGINE_CSMAP=1 \
+		-DENGINE_RADIX=1 \
+		-DBUILD_JSON_CONFIG=${BUILD_JSON_CONFIG} \
+		-DTESTS_LONG=${TESTS_LONG} \
+		-DTESTS_USE_FORCED_PMEM=1 \
+		-DTESTS_PMEMOBJ_DRD_HELGRIND=1 \
+		-DCXX_STANDARD=14
+
+	make -j$(nproc)
+}
+
 # this should be run only on CIs
 if [ "$CI_RUN" == "YES" ]; then
 	sudo_password chown -R $(id -u).$(id -g) $WORKDIR
