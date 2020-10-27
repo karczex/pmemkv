@@ -101,6 +101,7 @@ WORKDIR=/pmemkv
 SCRIPTSDIR=$WORKDIR/utils/docker
 
 echo Building on ${OS}-${OS_VER}
+cat /etc/os-release || true
 
 # Run a container with
 #  - environment variables set (--env)
